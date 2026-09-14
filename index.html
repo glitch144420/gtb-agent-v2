@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G.T.B - Gonna Take the Boredom</title>
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --accent: #667eea;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .dark-mode {
+            --bg: #1a1a2e;
+            --card: #16213e;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border: #2a2a4a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: 300px;
+            min-width: 300px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sidebar-logo {
+            padding: 20px;
+            text-align: center;
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .sidebar-logo h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+        
+        .sidebar-logo p {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 8px 5px;
+            border: none;
+            background: var(--bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+        
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .history-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+        
+        .history-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .history-item .title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+        
+        .history-item .meta {
+            font-size: 11px;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        
+        /* ===== Templates Grid ===== */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .template-btn {
+            padding: 10px 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .template-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+        
+        /* ===== Main ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        
+        .badge {
+            background: var(--success);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .icon-btn:hover {
+            background: var(--bg);
+            border-color: var(--accent);
+        }
+        
+        /* ===== Mode Tabs ===== */
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--card);
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.chat-active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .mode-btn.build-active {
+            background: var(--success);
+            color: white;
+        }
+        
+        .mode-btn.inactive {
+            background: var(--bg);
+            color: var(--text-light);
+        }
+        
+        .mode-btn.inactive:hover {
+            background: var(--border);
+        }
+        
+        /* ===== Chat Area ===== */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .message {
+            max-width: 85%;
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            background: var(--accent);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.agent {
+            background: var(--card);
+            color: var(--text);
+            margin-right: auto;
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.system {
+            background: #d4edda;
+            color: #155724;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 13px;
+            border-radius: 8px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--success);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .download-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* ===== Input Area ===== */
+        .input-area {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            background: var(--card);
+        }
+        
+        .input-area textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            resize: none;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 50px;
+            max-height: 120px;
+        }
+        
+        .input-area textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        .input-area button {
+            padding: 0 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .input-area button:hover {
+            opacity: 0.9;
+        }
+        
+        /* ===== Modal ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .btn-save {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-close {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* ===== Editor Modal ===== */
+        .editor-modal {
+            width: 90%;
+            max-width: 900px;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .editor-actions .btn {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+        
+        .editor-textarea {
+            width: 100%;
+            height: 400px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+        }
+        
+        .preview-frame {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+        }
+        
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                min-width: 250px;
+            }
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>G.T.B</h2>
+            <p>Gonna Take the Boredom</p>
+        </div>
+        
+        <!-- Templates -->
+        <div class="templates-grid">
+            <button class="template-btn" onclick="useTemplate('Build me a personal portfolio website')">🎨 Portfolio</button>
+            <button class="template-btn" onclick="useTemplate('Create a Python snake game')">🐍 Snake Game</button>
+            <button class="template-btn" onclick="useTemplate('Build a blog website')">📝 Blog</button>
+            <button class="template-btn" onclick="useTemplate('Create a data analysis script')">📊 Data Analysis</button>
+            <button class="template-btn" onclick="useTemplate('Build an e-commerce store')">🛒 E-commerce</button>
+            <button class="template-btn" onclick="useTemplate('Create a Flask API')">🔌 Flask API</button>
+        </div>
+        
+        <div class="sidebar-header">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('chats')">💬 Chats</button>
+                <button class="tab-btn" onclick="switchTab('projects')">📁 Projects</button>
+                <button class="tab-btn" onclick="switchTab('files')">📄 Files</button>
+            </div>
+        </div>
+        
+        <div class="sidebar-content" id="sidebarContent">
+            <div class="empty-state">No items yet</div>
+        </div>
+    </div>
+    
+    <!-- Main -->
+    <div class="main">
+        <div class="header">
+            <div class="header-title">
+                <h1>⚡ G.T.B</h1>
+                <span class="badge">BETA</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+                <button class="icon-btn" onclick="exportChat()" title="Export">📤</button>
+            </div>
+        </div>
+        
+        <!-- Mode Tabs -->
+        <div class="mode-tabs">
+            <button class="mode-btn chat-active" id="chatModeBtn" onclick="switchMode('chat')">💬 Chat</button>
+            <button class="mode-btn inactive" id="buildModeBtn" onclick="switchMode('build')">🏗️ Build</button>
+            <button class="mode-btn inactive" id="imageModeBtn" onclick="switchMode('images')">🖼️ Images</button>
+            
+            
+            
+            
+        </div>
+        
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message system">
+                👋 Welcome to G.T.B!<br>
+                Gonna Take the Boredom away!<br><br>
+                💬 <b>Chat</b> - Discuss your ideas<br>
+                🏗️ <b>Build</b> - Create projects<br>
+                🖼️ <b>Images</b> - Generate images
+            </div>
+        </div>
+        
+        <!-- Input -->
+        <div class="input-area">
+            <textarea id="messageInput" placeholder="Talk to G.T.B..." rows="2"></textarea>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsOverlay">
+        <div class="modal">
+            <h2>⚙️ Settings</h2>
+            
+            <div class="form-group">
+                <label>LLM Provider</label>
+                <select id="llmProvider">
+                    <option value="colab_ai">Google Colab AI (Free)</option>
+                    <option value="claudestore">ClaudeStore (LLMsRelay)</option>
+                    <option value="custom">Custom (OpenAI-compatible)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>LLM Base URL (optional)</label>
+                <input type="text" id="llmBaseUrl" placeholder="https://api.example.com/v1">
+            </div>
+            
+            <div class="form-group">
+                <label>LLM Model Name (optional)</label>
+                <input type="text" id="llmModelName" placeholder="e.g., gpt-4, claude-sonnet-4.6">
+            </div>
+            
+            <div class="form-group">
+                <label>LLM API Key (optional)</label>
+                <input type="password" id="llmApiKey" placeholder="sk-...">
+            </div>
+            
+            <hr style="border:1px solid var(--border);margin:20px 0">
+            
+            <div class="form-group">
+                <label>Image Provider</label>
+                <select id="imageProvider">
+                    <option value="none">None</option>
+                    <option value="replicate">Replicate</option>
+                    <option value="huggingface">Hugging Face</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Image Base URL (optional)</label>
+                <input type="text" id="imageBaseUrl" placeholder="https://api.replicate.com/v1">
+            </div>
+            
+            <div class="form-group">
+                <label>Image Model Name (optional)</label>
+                <input type="text" id="imageModelName" placeholder="e.g., ideogram-v3-turbo">
+            </div>
+            
+            <div class="form-group">
+                <label>Image API Key (optional)</label>
+                <input type="password" id="imageApiKey" placeholder="r8_...">
+            </div>
+            
+            <hr style="border:1px solid var(--border);margin:20px 0">
+            
+            <h3 style="margin-bottom:10px">🎬 Video Cutter</h3>
+            
+            <div class="form-group">
+                <label>Groq API Key (for Whisper + Analysis)</label>
+                <input type="password" id="groqApiKey" placeholder="gsk_...">
+            </div>
+            
+            <hr style="border:1px solid var(--border);margin:20px 0">
+            
+            <div class="form-group">
+                <label>Agent Memory (editable)</label>
+                <textarea id="agentMemory" rows="5" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;font-family:monospace" placeholder="Agent memory will appear here..."></textarea>
+                <button class="btn btn-save" style="margin-top:10px" onclick="saveMemory()">💾 Save Memory</button>
+            </div>
+            
+            <hr style="border:1px solid var(--border);margin:20px 0">
+            
+            <div class="form-group">
+                <label>Test Image Generation</label>
+                <input type="text" id="testImagePrompt" placeholder="Describe an image to test...">
+                <button class="btn btn-save" style="margin-top:10px" onclick="testImageGeneration()">🎨 Generate Test Image</button>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-save" onclick="saveSettings()">💾 Save</button>
+                <button class="btn btn-close" onclick="closeSettings()">✕ Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Editor Modal -->
+    <div class="modal-overlay" id="editorOverlay">
+        <div class="modal editor-modal">
+            <div class="editor-header">
+                <h3 id="editorTitle">📄 File</h3>
+                <div class="editor-actions">
+                    <button class="btn btn-save" onclick="showCode()">💻 Code</button>
+                    <button class="btn btn-save" onclick="showPreview()">👁️ Preview</button>
+                    <button class="btn btn-save" onclick="saveFile()">💾 Save</button>
+                    <button class="btn btn-close" onclick="closeEditor()">✕</button>
+                </div>
+            </div>
+            <textarea class="editor-textarea" id="editorTextarea"></textarea>
+            <iframe class="preview-frame" id="previewFrame" style="display:none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // ===== State =====
+        let currentMode = 'chat';
+        let currentFiles = [];
+        let currentProjectId = null;
+        let currentFilename = null;
+        let sessionId = 'session_' + Date.now();
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // ===== Theme =====
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            document.body.classList.toggle('dark-mode', currentTheme === 'dark');
+        }
+        document.body.classList.toggle('dark-mode', currentTheme === 'dark');
+        
+        // ===== Settings =====
+        function openSettings() {
+            document.getElementById('settingsOverlay').classList.add('active');
+            loadSettings();
+            loadMemory();
+        }
+        
+        function closeSettings() {
+            document.getElementById('settingsOverlay').classList.remove('active');
+        }
+        
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('pfa_settings') || '{}');
+            if (settings.llm_provider) document.getElementById('llmProvider').value = settings.llm_provider;
+            if (settings.llm_base_url) document.getElementById('llmBaseUrl').value = settings.llm_base_url;
+            if (settings.llm_api_key) document.getElementById('llmApiKey').value = settings.llm_api_key;
+            if (settings.llm_model_name) document.getElementById('llmModelName').value = settings.llm_model_name;
+            if (settings.image_provider) document.getElementById('imageProvider').value = settings.image_provider;
+            if (settings.image_base_url) document.getElementById('imageBaseUrl').value = settings.image_base_url;
+            if (settings.image_model_name) document.getElementById('imageModelName').value = settings.image_model_name;
+            if (settings.image_api_key) document.getElementById('imageApiKey').value = settings.image_api_key;
+            if (settings.groq_api_key) document.getElementById('groqApiKey').value = settings.groq_api_key;
+        }
+        
+        function saveSettings() {
+            const settings = {
+                llm_provider: document.getElementById('llmProvider').value,
+                llm_base_url: document.getElementById('llmBaseUrl').value,
+                llm_api_key: document.getElementById('llmApiKey').value,
+                llm_model_name: document.getElementById('llmModelName').value,
+                image_provider: document.getElementById('imageProvider').value,
+                image_base_url: document.getElementById('imageBaseUrl').value,
+                image_model_name: document.getElementById('imageModelName').value,
+                image_api_key: document.getElementById('imageApiKey').value,
+                groq_api_key: document.getElementById('groqApiKey').value
+            };
+            localStorage.setItem('pfa_settings', JSON.stringify(settings));
+            closeSettings();
+            alert('✅ Settings saved!');
+        }
+        
+        function loadMemory() {
+            fetch('/api/memory')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.memory) {
+                        document.getElementById('agentMemory').value = data.memory;
+                    }
+                });
+        }
+        
+        function saveMemory() {
+            const memory = document.getElementById('agentMemory').value;
+            fetch('/api/memory', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({memory: memory})
+            }).then(() => alert('✅ Memory saved!'));
+        }
+        
+        function saveSettingsSilent() {
+            const settings = {
+                llm_provider: document.getElementById('llmProvider').value,
+                llm_base_url: document.getElementById('llmBaseUrl').value,
+                llm_api_key: document.getElementById('llmApiKey').value,
+                llm_model_name: document.getElementById('llmModelName').value,
+                image_provider: document.getElementById('imageProvider').value,
+                image_base_url: document.getElementById('imageBaseUrl').value,
+                image_model_name: document.getElementById('imageModelName').value,
+                image_api_key: document.getElementById('imageApiKey').value,
+                groq_api_key: document.getElementById('groqApiKey').value
+            };
+            localStorage.setItem('pfa_settings', JSON.stringify(settings));
+        }
+        
+        // ===== Mode =====
+        
+        
+        // ===== Tabs =====
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'chats') renderChats();
+            else if (tab === 'projects') renderProjects();
+            else if (tab === 'files') renderFiles();
+        }
+        
+        function renderChats() {
+            const container = document.getElementById('sidebarContent');
+            const chats = JSON.parse(localStorage.getItem('pfa_conversations') || '[]');
+            
+            if (chats.length === 0) {
+                container.innerHTML = '<div class="empty-state">No conversations yet</div>';
+                return;
+            }
+            
+            container.innerHTML = chats.map(chat => `
+                <div class="history-item" onclick="loadChat('${chat.id}')">
+                    <div class="title">💬 ${chat.summary || 'Conversation'}</div>
+                    <div class="meta">
+                        <span>${chat.timestamp}</span>
+                        <span>${chat.files ? chat.files.length : 0} files</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderProjects() {
+            const container = document.getElementById('sidebarContent');
+            const projects = JSON.parse(localStorage.getItem('pfa_projects') || '[]');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<div class="empty-state">No projects yet</div>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(proj => `
+                <div class="history-item" onclick="loadProject('${proj.id}')">
+                    <div class="title">📁 ${proj.name || 'Project'}</div>
+                    <div class="meta">
+                        <span>${proj.timestamp}</span>
+                        <span>${proj.files ? proj.files.length : 0} files</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderFiles() {
+            const container = document.getElementById('sidebarContent');
+            
+            if (currentFiles.length === 0) {
+                container.innerHTML = '<div class="empty-state">No files available</div>';
+                return;
+            }
+            
+            container.innerHTML = currentFiles.map(file => `
+                <div class="history-item" onclick="openFile('${file}')">
+                    <div class="title">📄 ${file}</div>
+                </div>
+            `).join('');
+        }
+        
+        function loadChat(id) {
+            const chats = JSON.parse(localStorage.getItem('pfa_conversations') || '[]');
+            const chat = chats.find(c => c.id === id);
+            if (chat) {
+                document.getElementById('chatMessages').innerHTML = '';
+                addMessage(chat.summary || 'Conversation', 'agent');
+                if (chat.files) {
+                    addMessage('Files:\n' + chat.files.map(f => '• ' + f).join('\n'), 'agent');
+                }
+            }
+        }
+        
+        function loadProject(id) {
+            const projects = JSON.parse(localStorage.getItem('pfa_projects') || '[]');
+            const proj = projects.find(p => p.id === id);
+            if (proj) {
+                currentProjectId = proj.id;
+                currentFiles = proj.files || [];
+                document.getElementById('chatMessages').innerHTML = '';
+                addMessage('📁 ' + proj.name, 'system');
+                addMessage('Files:\n' + currentFiles.map(f => '• ' + f).join('\n'), 'agent');
+                
+                if (proj.download_url) {
+                    addDownloadButton(proj.download_url);
+                }
+                
+                switchTab('files');
+            }
+        }
+        
+        function useTemplate(template) {
+            document.getElementById('messageInput').value = template;
+            switchMode('build');
+        }
+        
+        // ===== Chat =====
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            let endpoint = '/api/chat';
+            if (currentMode === 'build') endpoint = '/api/build';
+            else if (currentMode === 'images') endpoint = '/api/generate_images_batch';
+
+
+
+            
+            try {
+                const settings = JSON.parse(localStorage.getItem('pfa_settings') || '{}');
+                
+                const requestBody = {
+                    message,
+                    session_id: sessionId,
+                    llm_provider: settings.llm_provider || 'colab_ai',
+                    llm_api_key: settings.llm_api_key || '',
+                    llm_base_url: settings.llm_base_url || '',
+                    llm_model_name: settings.llm_model_name || '',
+                    image_provider: settings.image_provider || 'none',
+                    image_api_key: settings.image_api_key || '',
+                    image_base_url: settings.image_base_url || '',
+                    image_model_name: settings.image_model_name || '',
+                    groq_api_key: settings.groq_api_key || ''
+                };
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'chat') {
+                    addMessage(data.message, 'agent');
+                } else if (data.status === 'success') {
+                    addMessage('✅ ' + (data.summary || 'Done!'), 'agent');
+                    
+                    if (data.files) {
+                        currentFiles = data.files;
+                        currentProjectId = data.project_id;
+                        addMessage('Files:\n' + data.files.map(f => '• ' + f).join('\n'), 'agent');
+                    }
+                    
+                    if (data.download_url) {
+                        addDownloadButton(data.download_url);
+                    }
+                    
+                    saveToLocalStorage(message, data);
+                } else {
+                    addMessage('❌ ' + (data.error || 'Error'), 'agent');
+                }
+            } catch (e) {
+                addMessage('❌ Error: ' + e.message, 'agent');
+            }
+        }
+        
+        function saveToLocalStorage(userMessage, data) {
+            const chats = JSON.parse(localStorage.getItem('pfa_conversations') || '[]');
+            chats.unshift({
+                id: Date.now().toString(),
+                timestamp: new Date().toLocaleString(),
+                summary: data.summary || userMessage.substring(0, 100),
+                files: data.files || []
+            });
+            localStorage.setItem('pfa_conversations', JSON.stringify(chats));
+            
+            const projects = JSON.parse(localStorage.getItem('pfa_projects') || '[]');
+            projects.unshift({
+                id: data.project_id,
+                timestamp: new Date().toLocaleString(),
+                name: data.project_name || data.project_id,
+                files: data.files || [],
+                download_url: data.download_url
+            });
+            localStorage.setItem('pfa_projects', JSON.stringify(projects));
+            
+            renderChats();
+        }
+        
+        // ===== Editor =====
+        function openFile(filename) {
+            currentFilename = filename;
+            document.getElementById('editorTitle').textContent = '📄 ' + filename;
+            document.getElementById('editorOverlay').classList.add('active');
+            
+            fetch(`/api/file/${currentProjectId}/${filename}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.content) {
+                        document.getElementById('editorTextarea').value = data.content;
+                    }
+                });
+        }
+        
+        function closeEditor() {
+            document.getElementById('editorOverlay').classList.remove('active');
+        }
+        
+        function showCode() {
+            document.getElementById('editorTextarea').style.display = 'block';
+            document.getElementById('previewFrame').style.display = 'none';
+        }
+        
+        function showPreview() {
+            if (currentFilename && currentFilename.endsWith('.html')) {
+                document.getElementById('editorTextarea').style.display = 'none';
+                document.getElementById('previewFrame').style.display = 'block';
+                document.getElementById('previewFrame').srcdoc = document.getElementById('editorTextarea').value;
+            } else {
+                alert('Preview available for HTML files only');
+            }
+        }
+        
+        function saveFile() {
+            if (!currentProjectId || !currentFilename) return;
+            
+            fetch('/api/save_file', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    project_id: currentProjectId,
+                    filename: currentFilename,
+                    content: document.getElementById('editorTextarea').value
+                })
+            }).then(() => alert('✅ Saved!'));
+        }
+        
+        // ===== Image Generation =====
+        async function testImageGeneration() {
+            const prompt = document.getElementById('testImagePrompt').value.trim();
+            if (!prompt) {
+                alert('Describe the image first');
+                return;
+            }
+            
+            saveSettingsSilent();
+            const settings = JSON.parse(localStorage.getItem('pfa_settings') || '{}');
+            
+            if (!settings.image_provider || settings.image_provider === 'none') {
+                alert('Select an image provider first');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/generate_image', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        prompt,
+                        image_provider: settings.image_provider,
+                        image_api_key: settings.image_api_key,
+                        image_base_url: settings.image_base_url || '',
+                        image_model_name: settings.image_model_name || ''
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const container = document.createElement('div');
+                    container.className = 'message agent';
+                    
+                    const label = document.createElement('div');
+                    label.textContent = '🎨 Generated Image:';
+                    container.appendChild(label);
+                    
+                    const img = document.createElement('img');
+                    img.src = data.image_url;
+                    img.style.cssText = 'max-width:100%;border-radius:8px;margin-top:10px;display:block';
+                    container.appendChild(img);
+                    
+                    const btn = document.createElement('button');
+                    btn.textContent = '📥 Download';
+                    btn.style.cssText = 'display:block;margin-top:10px;padding:8px 16px;background:#48bb78;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold';
+                    btn.onclick = function() { window.open(data.image_url, '_blank'); };
+                    container.appendChild(btn);
+                    
+                    document.getElementById('chatMessages').appendChild(container);
+                    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                    
+                    closeSettings();
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to generate image'));
+                }
+            } catch (e) {
+                alert('❌ Error: ' + e.message);
+            }
+        }
+        
+        // ===== Helpers =====
+        
+        // ========== Video Studio Functions ==========
+        let uploadedPath = null;
+        
+        function vtab(tab) {
+            // إخفاء الكل
+            document.querySelectorAll('.vcontent').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+            
+            // إظهار المطلوب
+            document.getElementById('vc-' + tab).style.display = 'block';
+            document.getElementById('vtab-' + tab).classList.add('active');
+            
+            if (tab === 'fonts') doLoadFonts();
+        }
+        
+        
+        
+        async function doMerge() {
+            const paths = document.getElementById('mergeList').value.trim().split('\n').filter(p => p.trim());
+            if (paths.length < 2) { alert('Enter at least 2 paths'); return; }
+            
+            addMessage('⏳ Merging ' + paths.length + ' videos...', 'agent');
+            
+            try {
+                const r = await fetch('/api/video/merge', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({video_paths: paths})
+                });
+                const d = await r.json();
+                addMessage(d.status === 'success' ? '✅ ' + d.output_video : '❌ ' + d.error, 'agent');
+            } catch (e) { addMessage('❌ ' + e.message, 'agent'); }
+        }
+        
+        async function doCut() {
+            if (!uploadedPath) { alert('Upload a video first'); return; }
+            
+            const start = document.getElementById('cutStart').value;
+            const end = document.getElementById('cutEnd').value;
+            
+            addMessage('⏳ Cutting ' + start + ' → ' + end, 'agent');
+            
+            try {
+                const r = await fetch('/api/video/cut', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({video_path: uploadedPath, start: start, end: end})
+                });
+                const d = await r.json();
+                addMessage(d.status === 'success' ? '✅ ' + d.output_video : '❌ ' + d.error, 'agent');
+            } catch (e) { addMessage('❌ ' + e.message, 'agent'); }
+        }
+        
+        async function doCaptions() {
+            if (!uploadedPath) { alert('Upload a video first'); return; }
+            
+            const settings = JSON.parse(localStorage.getItem('pfa_settings') || '{}');
+            if (!settings.groq_api_key) { alert('Add Groq API Key in Settings ⚙️'); return; }
+            
+            const font = document.getElementById('capFont').value;
+            const size = parseInt(document.getElementById('capSize').value);
+            const pos = document.getElementById('capPos').value;
+            
+            addMessage('⏳ Adding captions...', 'agent');
+            
+            try {
+                const r = await fetch('/api/video/captions', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        video_path: uploadedPath,
+                        groq_api_key: settings.groq_api_key,
+                        font: font,
+                        font_size: size,
+                        position: pos
+                    })
+                });
+                const d = await r.json();
+                addMessage(d.status === 'success' ? '✅ ' + d.output_video : '❌ ' + d.error, 'agent');
+            } catch (e) { addMessage('❌ ' + e.message, 'agent'); }
+        }
+        
+        async function doLoadFonts() {
+            const list = document.getElementById('fontsList');
+            list.textContent = 'Loading...';
+            
+            try {
+                const r = await fetch('/api/video/fonts');
+                const d = await r.json();
+                list.innerHTML = (d.fonts && d.fonts.length) 
+                    ? d.fonts.map(f => '<div style="padding:4px 0;border-bottom:1px solid var(--border)">🔤 ' + f + '</div>').join('')
+                    : 'No fonts found';
+            } catch (e) { list.textContent = '❌ ' + e.message; }
+        }
+
+        
+        // ========== Agent Console ==========
+        
+        
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        
+        // ========== Video Agent ==========
+        let lastVideoOutput = null;
+        
+        
+
+        
+        // ========== Video Studio ==========
+        let uploadedPath = null;
+        
+        
+        
+        
+        
+        
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            document.getElementById('chatModeBtn').className = 'mode-btn ' + (mode === 'chat' ? 'chat-active' : 'inactive');
+            document.getElementById('buildModeBtn').className = 'mode-btn ' + (mode === 'build' ? 'build-active' : 'inactive');
+            document.getElementById('imageModeBtn').className = 'mode-btn ' + (mode === 'images' ? 'build-active' : 'inactive');
+            
+            const ph = {
+                'chat': 'Talk to G.T.B...',
+                'build': 'Describe what to build...',
+                'images': 'Describe the images you want...'
+            };
+            document.getElementById('messageInput').placeholder = ph[mode] || '';
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = 'message ' + sender;
+            div.textContent = text;
+            document.getElementById('chatMessages').appendChild(div);
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+        
+        function addDownloadButton(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.className = 'download-btn';
+            link.textContent = '📥 Download ZIP';
+            link.target = '_blank';
+            
+            const div = document.createElement('div');
+            div.className = 'message agent';
+            div.appendChild(link);
+            document.getElementById('chatMessages').appendChild(div);
+        }
+        
+        function exportChat() {
+            const chats = JSON.parse(localStorage.getItem('pfa_conversations') || '[]');
+            if (!chats.length) {
+                alert('No conversations to export');
+                return;
+            }
+            
+            let markdown = '# G.T.B Chat History\n\n';
+            chats.forEach(c => {
+                markdown += `## ${c.timestamp}\n${c.summary}\n\n`;
+            });
+            
+            const blob = new Blob([markdown], {type: 'text/markdown'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'gtb_chat_history.md';
+            a.click();
+        }
+        
+        // ===== Enter key =====
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // ===== Init =====
+        renderChats();
+    </script>
+</body>
+</html>

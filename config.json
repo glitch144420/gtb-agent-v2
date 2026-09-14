@@ -1,0 +1,10 @@
+{
+  "llm_provider": "colab_ai",
+  "llm_base_url": "",
+  "llm_api_key": "",
+  "llm_model_name": "",
+  "image_provider": "none",
+  "image_base_url": "",
+  "image_model_name": "",
+  "image_api_key": ""
+}
